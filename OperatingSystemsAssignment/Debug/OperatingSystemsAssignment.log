@@ -1,0 +1,6 @@
+﻿  Source2.cpp
+c:\users\univ\documents\visual studio 2015\projects\operatingsystemsassignment\operatingsystemsassignment\source2.cpp(181): warning C4018: '<': signed/unsigned mismatch
+c:\users\univ\documents\visual studio 2015\projects\operatingsystemsassignment\operatingsystemsassignment\source2.cpp(217): warning C4018: '<': signed/unsigned mismatch
+c:\users\univ\documents\visual studio 2015\projects\operatingsystemsassignment\operatingsystemsassignment\source2.cpp(230): warning C4018: '<': signed/unsigned mismatch
+  OperatingSystemsAssignment.vcxproj -> C:\Users\Univ\documents\visual studio 2015\Projects\OperatingSystemsAssignment\Debug\OperatingSystemsAssignment.exe
+  OperatingSystemsAssignment.vcxproj -> C:\Users\Univ\documents\visual studio 2015\Projects\OperatingSystemsAssignment\Debug\OperatingSystemsAssignment.pdb (Full PDB)

@@ -1,0 +1,81 @@
+void logger::logProcess(pcb process,int clk,)
+	{
+	//	int level = 10 - int(ceil(log2(process.p_size)));
+		int endaddress = process.startAddress +(1<<( (int)(ceil(log2(process.p_size)))))-1;
+		switch (process.state)
+		{
+		case 2://stopped
+		{
+		
+			outfile << "Executing process " << process.pid << " : started at " << clk << ", stopped at " << process.laststopTime << ", " << process.remainingTime << " remaining memory starts at " << process.startAddress << " and ends at " << endaddress << endl;
+			break;
+		}
+		case 3://finished
+		{
+
+			outfile << "Executing process " << process.pid << " : started at " << process.executionStart << ", finished at " << process.laststopTime <<", memory starts at " << process.startAddress << " and ends at " << endaddress << endl;
+			break;
+		}
+
+		default:
+			break;
+		}
+
+	}
+
+
+
+
+	
+		//Enqueue arriving process
+		if (running.arrivalTime != -1) //A process is running
+		{
+			if (!readyQueue.empty())
+			{
+
+				if (running.remainingTime - quantum > 0) //process has not finished
+				{
+					running.updatepcb(2, clk); //stopped
+					readyQueue.push_back(running);
+
+                    mylog.logSwitching(clk, switchtime);
+					_sleep(switchtime);
+					clk += switchtime;
+					running = readyQueue[0];
+					readyQueue.erase(readyQueue.begin());
+					if (running.laststopTime == 0)
+					{
+
+						running.updatepcb(0, clk);
+
+
+
+
+					}
+					else
+						running.updatepcb(1, clk);
+					_sleep(quantum);
+					mylog.logProcess(running);
+					clk += quantum;
+
+				}
+				else
+				{
+					//finished process
+
+				}
+			}
+
+
+             //decrease reamaing time by quantum
+			// push it in queue
+			//get top of queue,run it
+
+		}
+		else
+		{
+			//////Else if there is no running processes
+			//get first in queue ,run it , sleep quant
+		}
+ 
+	}
