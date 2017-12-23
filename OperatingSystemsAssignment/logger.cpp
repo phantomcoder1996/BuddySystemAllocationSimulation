@@ -63,7 +63,7 @@
 	void logger::logProcess(pcb process, int clk, int q)
 	{
 		//	int level = 10 - int(ceil(log2(process.p_size)));
-		int endaddress = process.startAddress + (1 << ((int)(ceil(log2(process.p_size))))) - 1;
+		int endaddress = process.startAddress + (1 << ((int)(ceil(log2(process.p_size+6))))) - 1;
 		switch (process.state)
 		{
 		case 2://stopped
@@ -89,8 +89,15 @@
 	void logger::logFinished(pcb process)
 	{
 	//	outfile << "process_id\trun_time\tarrival_time\tfinish_time\tmem_size\tmem_start\tmem_end" << endl;
-		int endaddress = process.startAddress + (1 << ((int)(ceil(log2(process.p_size+6))))) - 1;
-		outfile << process.pid << "\t\t\t" << process.runtime << "\t\t\t" << process.arrivalTime << "\t\t\t\t" << process.finishTime << "\t\t\t\t" << process.p_size << "\t\t\t" << process.startAddress << "\t\t\t" << endaddress << endl;
+		if (process.startAddress != -1)
+		{
+			int endaddress = process.startAddress + (1 << ((int)(ceil(log2(process.p_size + 6))))) - 1;
+			outfile << process.pid << "\t\t\t" << process.runtime << "\t\t\t" << process.arrivalTime << "\t\t\t\t" << process.finishTime << "\t\t\t\t" << process.p_size << "\t\t\t" << process.startAddress << "\t\t\t" << endaddress << endl;
+		}
+		else
+		{
+			outfile << process.pid << "\t\t\t"<< "Process cannot be allocated" << endl;
+		}
 		
 	}
 

@@ -48,11 +48,11 @@ int main()
 
 	{
 		EnqueueArrivingProcesses();
+		
 		//printQueueState();
 
 		if (!readyQueue.empty())
-		{
-			if (firstArrival)
+		{	if (firstArrival  )
 			{
 				firstArrival = false;
 				printQueueState();
@@ -93,11 +93,11 @@ int main()
 			}
 			else
 			{
-
+				
 				pcb temp = readyQueue[0];
 				if ( (!(memalloc.allocate(temp)))) //not allocated before
 				{
-
+					printQueueState();
 					readyQueue.erase(readyQueue.begin());
 					if (temp.noAllocationCount <= 5) //
 					{
@@ -108,20 +108,24 @@ int main()
 					else
 					{
 						cout << "Process cannot be allocated" << endl;
+						finished.push_back(temp);
 					}
-					clk++;
+					//clk++;
 					EnqueueArrivingProcesses();
-					printQueueState();
+					
 
 				}
 				else
 				{
-					//if (running.pid != temp.pid) //not same process
+					if (running.pid != temp.pid  ) //not same process
 					{
-						clk++;
-						mylog.logSwitching(clk, switchtime);
-						clk += switchtime;
-						clk++;
+						//mylog.logProcess(running, clk, quantum);
+						///clk++;
+						
+							mylog.logSwitching(clk, switchtime);
+							clk += switchtime;
+						
+						//clk++;
 						//	_sleep(switchtime);
 						running = temp;
 						printQueueState();
@@ -168,12 +172,57 @@ int main()
 
 					}
 
+					else
+					{
+						printQueueState();
+						readyQueue.erase(readyQueue.begin());
+						if (running.remainingTime - quantum > 0)
+						{
+
+							//	_sleep(quantum);
+							if (running.laststopTime == 0)
+							{
+								running.updatepcb(0, clk);
+							}
+							else
+							{
+								running.updatepcb(1, clk); //resumed
+							}
+							
+							running.updatepcb(2, clk + quantum); //run and stop
+							mylog.logProcess(running, clk, quantum);
+							clk += quantum;
+
+							EnqueueArrivingProcesses(); //check if a process has arrived before pushing the process to the end of the queue
+							readyQueue.push_back(running);
+							//printQueueState();
+
+						}
+						else//The process will finish
+						{
+							int temprmtime = running.remainingTime;
+							//_sleep(running.remainingTime);
+							running.updatepcb(3, clk + running.remainingTime);
+							mylog.logProcess(running, clk, temprmtime);
+							clk += temprmtime;
+
+							//now deallocate the procese
+							memalloc.deallocate(running);
+							finished.push_back(running);
+							//output.logFinished(running);
+							EnqueueArrivingProcesses();
+							//printQueueState();
+						}
+
+					}
+
+
 				}
 			}
 
 		}
 
-
+		else { clk++; }
 	}
 	
 

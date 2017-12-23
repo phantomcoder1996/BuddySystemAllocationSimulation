@@ -10,6 +10,10 @@ MemoryAllocator::MemoryAllocator()
 bool MemoryAllocator::allocate(pcb & p)
 
 {
+
+
+	
+
 	if (p.startAddress != -1) return true; //process already alloacted
 	 
 	int level = 10 - int(ceil(log2(p.p_size+6)));
@@ -40,13 +44,14 @@ bool MemoryAllocator::allocate(pcb & p)
 		//int startAdd = (buddylist[i][0] + blocksize(i)) / 2;
 		buddylist[++i].push_back(startAdd + (blocksize(i)) / 2);
 		//temp = startAdd; 
-		//sort(buddylist[i + 1].begin(), buddylist[i + 1].end());
+		//sort(buddylist[i ].begin(), buddylist[i ].end());
 		//++i;
 	}
 	//int startAdd = (buddylist[i - 1][0]) - blocksize(i - 1);
 	//buddylist[i].push_back(startAdd);
-//	sort(buddylist[i + 1].begin(), buddylist[i + 1].end());
+	
 	p.startAddress = startAdd;
+	
 	return true;
     
 
@@ -73,6 +78,7 @@ void MemoryAllocator::deallocate(pcb &p)
 			if (it != buddylist[j].end())
 			{
 				buddylist[j].erase(it);
+				
 //				start_add = p.startAddress;
 				
 
@@ -93,6 +99,7 @@ void MemoryAllocator::deallocate(pcb &p)
 			{
 				buddylist[j].erase(it);
 				start_add = (indx - 1)*blocksize(j);
+				
 
 
 			}
@@ -106,6 +113,7 @@ void MemoryAllocator::deallocate(pcb &p)
 		}
 		--j;
 	}
+
 	
 }
 
